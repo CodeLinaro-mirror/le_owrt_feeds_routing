@@ -41,7 +41,7 @@ define KernelPackage/nat46
   TITLE:=Stateless NAT46 translation kernel module
   SECTION:=kernel
   SUBMENU:=Network Support
-  FILES:=$(PKG_BUILD_DIR)/nat46/modules/nat46.ko 
+  FILES:=$(PKG_BUILD_DIR)/nat46/modules/nat46.ko
   AUTOLOAD:=$(call AutoLoad,33,nat46)
 endef
 
@@ -61,6 +61,11 @@ define Build/Compile
 		MODFLAGS="-DMODULE -mlong-calls" \
 		EXTRA_CFLAGS="-DNAT46_VERSION=\\\"$(PKG_SOURCE_VERSION)\\\"" \
 		modules
+endef
+
+define Build/InstallDev
+	mkdir -p -m 0777 $(STAGING_DIR)/usr/include/nat46
+	$(CP) $(PKG_BUILD_DIR)/nat46/modules/*.h  $(STAGING_DIR)/usr/include/nat46/
 endef
 
 define Package/map-t/install

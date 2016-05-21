@@ -195,6 +195,8 @@ define Package/quagga/install
 	$(INSTALL_BIN) ./files/quagga $(1)/usr/sbin/quagga.init
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/quagga.init $(1)/etc/init.d/quagga
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
+	$(INSTALL_DATA) ./files/quagga.hotplug $(1)/etc/hotplug.d/iface/70-quagga
 endef
 
 define Package/quagga-watchquagga/install
@@ -248,6 +250,8 @@ define Package/quagga-ripd/install
 	$(INSTALL_DIR) $(1)/etc/quagga
 	chmod 0750 $(1)/etc/quagga
 	$(INSTALL_CONF) ./files/quagga.conf $(1)/etc/quagga/ripd.conf
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/ripd.config $(1)/etc/config/ripd
 endef
 
 define Package/quagga-ripngd/install

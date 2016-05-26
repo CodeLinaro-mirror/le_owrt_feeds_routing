@@ -95,14 +95,14 @@ mcproxy_handle_behaviour() {
 	config_get rulematching "$behaviour" "rulematching"
 	config_get table "$behaviour" "table"
 
-	if [ -z $instance ]; then
+	if [ -z "$instance" ]; then
 		return 1
 	fi
 
 	local rule_table
-	if [ ! -z $rulematching ]; then
+	if [ ! -z "$rulematching" ]; then
 		rule_table="rulematching $rulematching"
-	elif [ ! -z $table ]; then
+	elif [ ! -z "$table" ]; then
 		local whitelist
 		local list
 

@@ -52,6 +52,8 @@ define Package/mcproxy/install
 	$(INSTALL_BIN) ./files/mcproxy.init $(1)/etc/init.d/mcproxy
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mcproxy-bin $(1)/usr/sbin/mcproxy
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
+	$(INSTALL_CONF) ./files/mcproxy.hotplug $(1)/etc/hotplug.d/iface/55-mcproxy
 endef
 
 $(eval $(call BuildPackage,mcproxy))

@@ -1,4 +1,5 @@
 #!/bin/sh /etc/rc.common
+# Copyright (c) 2016 The Linux Foundation. All rights reserved.
 # Copyright (C) 2014-2015 OpenWrt.org
 
 START=99
@@ -21,6 +22,17 @@ mcproxy_handle_instances() {
 	if [ $disabled -eq 1 ]; then
 		pre="# "
 	fi
+
+	#default WAN
+	[ -n "$upstreams" ] || {
+		upstreams=$(uci_get_state network wan ifname wan)
+	}
+
+	#default LAN
+	[ -n "$downstreams" ] || {
+		downstreams=$(uci_get_state network lan ifname lan)
+	}
+
 
 	local str_up=""
 	if [ -n "$upstreams" ]; then

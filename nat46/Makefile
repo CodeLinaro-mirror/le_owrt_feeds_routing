@@ -16,6 +16,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/ayourtch/nat46.git
 PKG_SOURCE_PROTO:=git
+PKG_SOURCE_BRANCH:=github/master
 PKG_SOURCE_VERSION:=8ff2ae59ec9840a7b8b45f976c51cae80abe0226
 PKG_MAINTAINER:=Steven Barth <cyrus@openwrt.org>
 PKG_LICENSE:=GPL-2.0

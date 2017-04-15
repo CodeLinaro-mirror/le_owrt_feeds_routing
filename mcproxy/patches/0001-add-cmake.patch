@@ -47,7 +47,7 @@
 +           mcproxy/src/parser/parser.cpp 
 +           mcproxy/src/parser/interface.cpp
 +)
-+target_link_libraries(mcproxy-bin pthread)
++target_link_libraries(mcproxy-bin pthread dl)
 +
 +# Installation
 +install(TARGETS mcproxy-bin DESTINATION bin/)

@@ -143,6 +143,10 @@ mcproxy_network_trigger() {
 mcproxy_handle_network() {
 	local instance="$1"
 
+	#ignore the disabled instance
+	config_get_bool aux "$instance" 'disabled' '0'
+	[ "$aux" = 1 ] && return 1
+
 	config_list_foreach "$instance" upstream mcproxy_network_trigger
 	config_list_foreach "$instance" downstream mcproxy_network_trigger
 }
@@ -194,4 +198,13 @@ service_triggers() {
 start_service() {
 	config_load mcproxy
 	config_foreach start_instance mcproxy
+}
+
+stop_service() {
+	#Service can't be really killed by the sigint or sigterm
+	Command=$(ps |grep mcproxy |head -1|awk '{ print $5 }')
+	name="$(basename "${Command}")"
+	if [ $name = "mcproxy" ]; then
+		ps |grep mcproxy |head -1|awk '{ print $1 }'|xargs kill -9
+	fi
 }

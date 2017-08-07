@@ -43,6 +43,10 @@ define Package/mcproxy/conffiles
 /etc/config/mcproxy
 endef
 
+ifdef CONFIG_USE_MUSL
+  TARGET_CFLAGS += -D__UCLIBC__
+endif
+
 define Package/mcproxy/install
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_CONF) ./files/mcproxy.conf $(1)/etc/mcproxy.conf

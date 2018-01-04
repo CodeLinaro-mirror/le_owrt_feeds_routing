@@ -201,10 +201,10 @@ start_service() {
 }
 
 stop_service() {
-	#Service can't be really killed by the sigint or sigterm
-	Command=$(ps |grep mcproxy |head -1|awk '{ print $5 }')
-	name="$(basename "${Command}")"
-	if [ $name = "mcproxy" ]; then
-		ps |grep mcproxy |head -1|awk '{ print $1 }'|xargs kill -9
-	fi
+	for _pid in $(pidof mcproxy)
+	do
+		if [ "${_pid}" -ne "$$" ]; then
+			kill -9 ${_pid}
+		fi
+	done
 }

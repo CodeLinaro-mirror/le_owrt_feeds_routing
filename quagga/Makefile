@@ -44,6 +44,9 @@ define Package/quagga/Default
   MAINTAINER:=Vasilis Tsiligiannis <b_tsiligiannis@silverton.gr>
 endef
 
+TARGET_CFLAGS += -fpie
+TARGET_LDFLAGS += -pie
+
 define Package/quagga
   $(call Package/quagga/Default)
   DEPENDS:=+librt

@@ -47,6 +47,9 @@ ifdef CONFIG_USE_MUSL
   TARGET_CFLAGS += -D__UCLIBC__
 endif
 
+TARGET_LDFLAGS += -pie
+TARGET_CFLAGS += -fpie
+
 define Package/mcproxy/install
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_CONF) ./files/mcproxy.conf $(1)/etc/mcproxy.conf

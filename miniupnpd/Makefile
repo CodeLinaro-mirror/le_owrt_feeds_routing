@@ -20,6 +20,9 @@ PKG_LICENSE:=BSD-3-Clause
 
 include $(INCLUDE_DIR)/package.mk
 
+TARGET_CFLAGS += -fpie
+TARGET_LDFLAGS += -pie
+
 define Package/miniupnpd
   SECTION:=net
   CATEGORY:=Network

@@ -1,6 +1,5 @@
-diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
---- old/nat46/modules/nat46-core.c	2018-07-17 09:14:58.956185663 +0530
-+++ new/nat46/modules/nat46-core.c	2018-07-17 11:40:52.676135171 +0530
+--- old/nat46/modules/nat46-core.c	2018-09-14 15:12:47.597916000 +0530
++++ new/nat46/modules/nat46-core.c	2018-09-17 11:27:02.879797590 +0530
 @@ -119,6 +119,13 @@
      *arg_plen++ = 0;
      if (pref_len) {
@@ -160,7 +159,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
  }
 
  int nat46_set_config(nat46_instance_t *nat46, char *buf, int count) {
-@@ -853,37 +982,97 @@
+@@ -853,37 +982,113 @@
    return ( (apair->local.style != NAT46_XLATE_NONE) && (apair->remote.style != NAT46_XLATE_NONE) );
  }
 
@@ -177,7 +176,15 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
 +		for (ipair = 0; ipair < nat46->npairs; ipair++) {
 +			apair = &nat46->sorted_ipv4_local_pairs[ipair];
 +
-+			uint32_t mask = htonl(U32_MASK << (IPV4_BITS_MAX - apair->local.v4_pref_len));
++			uint32_t mask = 0;
++
++			/*
++			 * For a 32-bit number, if the shift count is 32, then the
++			 * result of the left shift operation is always 0.
++			 */
++			if (apair->local.v4_pref_len) {
++				mask = htonl(U32_MASK << (IPV4_BITS_MAX - apair->local.v4_pref_len));
++			}
 +
 +			if((*(uint32_t *)paddr & mask) == (apair->local.v4_pref & mask))
 +				return apair;
@@ -187,7 +194,15 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
 +		for (ipair = 0; ipair < nat46->npairs; ipair++) {
 +			apair = &nat46->sorted_ipv4_remote_pairs[ipair];
 +
-+			uint32_t mask = htonl(U32_MASK << (IPV4_BITS_MAX - apair->remote.v4_pref_len));
++			uint32_t mask = 0;
++
++			/*
++			 * For a 32-bit number, if the shift count is 32, then the
++			 * result of the left shift operation is always 0.
++			 */
++			if (apair->remote.v4_pref_len) {
++				mask = htonl(U32_MASK << (IPV4_BITS_MAX - apair->remote.v4_pref_len));
++			}
 +
 +			if((*(uint32_t *)paddr & mask) == (apair->remote.v4_pref & mask))
 +				return apair;
@@ -281,7 +296,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
  }
 
  /*
-@@ -1464,36 +1653,23 @@
+@@ -1464,36 +1669,23 @@
    return ret;
  }
 
@@ -331,7 +346,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
    }
    if (xlate_dst >= 0) {
      if (xlate_src < 0) {
-@@ -1513,12 +1689,14 @@
+@@ -1513,12 +1705,14 @@
  }
 
  int xlate_6_to_4(struct net_device *dev, struct ipv6hdr *ip6h, uint16_t proto, __u32 *pv4saddr, __u32 *pv4daddr) {
@@ -347,7 +362,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
    nat46_instance_t *nat46 = get_nat46_instance(old_skb);
    uint16_t proto;
    uint16_t frag_off;
-@@ -1580,7 +1758,7 @@
+@@ -1580,7 +1774,7 @@
    }
 
 
@@ -356,7 +371,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
      nat46debug(0, "[nat46] Could not translate v6->v4");
      goto done;
    }
-@@ -1720,37 +1898,24 @@
+@@ -1720,37 +1914,24 @@
    return 0;
  }
 
@@ -407,7 +422,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
    }
    nat46debug(5, "[nat46] pairs_xlate_v4_to_v6_outer result: src %d dst %d", xlate_src, xlate_dst);
    if ( (xlate_src >= 0) && (xlate_dst >= 0) ) {
-@@ -1762,14 +1927,13 @@
+@@ -1762,14 +1943,13 @@
  }
 
  int xlate_4_to_6(struct net_device *dev, struct iphdr *hdr4, int sport, int dport, void *v6saddr, void *v6daddr) {
@@ -426,7 +441,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
   */
  int pairs_xlate_v4_to_v6_inner(nat46_instance_t *nat46, struct iphdr *iph, int sport, int dport, void *v6saddr, void *v6daddr) {
    int ipair = 0;
-@@ -1777,40 +1941,31 @@
+@@ -1777,40 +1957,31 @@
    int xlate_src = -1;
    int xlate_dst = -1;
 
@@ -485,7 +500,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
 
    struct ipv6hdr ip6h;
    char v6saddr[16], v6daddr[16];
-@@ -1902,6 +2057,7 @@
+@@ -1902,6 +2073,7 @@
 
  void nat46_ipv4_input(struct sk_buff *old_skb) {
    nat46_instance_t *nat46 = get_nat46_instance(old_skb);
@@ -493,7 +508,7 @@ diff -Naur old/nat46/modules/nat46-core.c new/nat46/modules/nat46-core.c
    struct sk_buff *new_skb;
    uint16_t sport = 0, dport = 0, ret = 0;
    uint8_t tclass;
-@@ -1964,7 +2120,7 @@
+@@ -1964,7 +2136,7 @@
      sport = 0;
    }
 

@@ -30,7 +30,7 @@ static void sighandler(__attribute__((unused)) int signal)
 int main(int argc, const char *argv[])
 {
 	char buf[INET6_ADDRSTRLEN], prefix[INET6_ADDRSTRLEN + 4];
-	int pid;
+	int pid = 0;
 	
 	if (argc <= 1) {
 		fprintf(stderr, "Usage: %s <name> [ifname] [ipv6prefix] [ipv4addr] [ipv6addr]\n", argv[0]);
@@ -41,7 +41,8 @@ int main(int argc, const char *argv[])
 	FILE *fp = fopen(buf, "r");
 	if (fp) {
 		fscanf(fp, "%d", &pid);
-		kill(pid, SIGTERM);
+		if (pid != 0)
+			kill(pid, SIGTERM);
 		unlink(buf);
 		fclose(fp);
 	}

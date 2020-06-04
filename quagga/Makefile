@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=quagga
-PKG_VERSION:=1.1.1
+PKG_VERSION:=1.2.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SAVANNAH/quagga/
-PKG_HASH:=b5a94e5bdad3062e04595a5692b8cc435f0a85102f75dfdca0a06d093b4ef63f
-
+PKG_HASH:=e364c082c3309910e1eb7b068bf39ee298e2f2f3f31a6431a5c115193bd653d3
 PKG_MAINTAINER:=Vasilis Tsiligiannis <acinonyx@openwrt.gr>
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
@@ -44,7 +43,7 @@ define Package/quagga/Default
   SUBMENU:=Routing and Redirection
   TITLE:=The Quagga Software Routing Suite
   URL:=https://www.quagga.net
-  DEPENDS:=quagga
+  DEPENDS:=quagga +c-ares
 endef
 
 define Package/quagga

@@ -8,12 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=quagga
-PKG_VERSION:=1.1.0
+PKG_VERSION:=1.2.4
 PKG_RELEASE:=1
-PKG_MD5SUM:=daa303871e07ea5856aae6fd79e89722
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://download.savannah.gnu.org/releases/quagga/
+PKG_SOURCE_URL:=@SAVANNAH/quagga/
+PKG_HASH:=e364c082c3309910e1eb7b068bf39ee298e2f2f3f31a6431a5c115193bd653d3
+PKG_MAINTAINER:=Vasilis Tsiligiannis <acinonyx@openwrt.gr>
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
+
+PKG_BUILD_PARALLEL:=1
+PKG_FIXUP:=autoreconf
+PKG_INSTALL:=1
+
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_IPV6 \
 	CONFIG_PACKAGE_quagga-watchquagga \
@@ -26,10 +34,6 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_quagga-ripd \
 	CONFIG_PACKAGE_quagga-ripngd \
 	CONFIG_PACKAGE_quagga-vtysh
-PKG_BUILD_PARALLEL:=1
-PKG_FIXUP:=autoreconf
-PKG_INSTALL:=1
-PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,10 +41,9 @@ define Package/quagga/Default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Routing and Redirection
-  DEPENDS:=quagga
   TITLE:=The Quagga Software Routing Suite
-  URL:=http://www.quagga.net
-  MAINTAINER:=Vasilis Tsiligiannis <acinonyx@openwrt.gr>
+  URL:=https://www.quagga.net
+  DEPENDS:=quagga +c-ares
 endef
 
 TARGET_CFLAGS += -fpie

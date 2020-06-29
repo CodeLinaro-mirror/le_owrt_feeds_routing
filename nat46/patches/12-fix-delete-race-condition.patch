@@ -1,0 +1,39 @@
+commit f456ad3fba9e147211dc2e4ac35dbbc02171ed9b
+Author: Ken Zhu <guigenz@codeaurora.org>
+Date:   Mon Jun 29 14:58:05 2020 -0700
+
+    nat46: fix at46 crash during stability test
+
+    when deleting the same device in a very close time, the first deletion
+    is not finished yet, the second one will hit the BUG_ON.
+
+    Change-Id: I8ee048b538639cb366e3a7b1d70a61a31e91d11b
+    Signed-off-by: Ken Zhu <guigenz@codeaurora.org>
+
+diff -Nur a/nat46/modules/nat46-module.c nat46-6/nat46/modules/nat46-module.c
+--- a/nat46/modules/nat46-module.c	2020-06-29 14:45:51.507348229 -0700
++++ nat46-6/nat46/modules/nat46-module.c	2020-06-29 14:46:11.031277748 -0700
+@@ -61,6 +61,7 @@
+ module_param(add_dummy_header, bool, 0);
+ MODULE_PARM_DESC(add_dummy_header, "Add dummy fragment header");
+ 
++static DEFINE_MUTEX(add_del_lock);
+ static struct proc_dir_entry *nat46_proc_entry;
+ static struct proc_dir_entry *nat46_proc_parent;
+ 
+@@ -115,11 +116,15 @@
+ 		if (0 == strcmp(arg_name, "add")) {
+ 			devname = get_devname(&tail);
+ 			printk(KERN_INFO "nat46: adding device (%s)\n", devname);
++			mutex_lock(&add_del_lock);
+ 			nat46_create(devname);
++			mutex_unlock(&add_del_lock);
+ 		} else if (0 == strcmp(arg_name, "del")) {
+ 			devname = get_devname(&tail);
+ 			printk(KERN_INFO "nat46: deleting device (%s)\n", devname);
++			mutex_lock(&add_del_lock);
+ 			nat46_destroy(devname);
++			mutex_unlock(&add_del_lock);
+ 		} else if (0 == strcmp(arg_name, "config")) {
+ 			devname = get_devname(&tail);
+ 			printk(KERN_INFO "nat46: configure device (%s) with '%s'\n", devname, tail);

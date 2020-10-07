@@ -43,7 +43,7 @@ define Package/quagga/Default
   SUBMENU:=Routing and Redirection
   TITLE:=The Quagga Software Routing Suite
   URL:=https://www.quagga.net
-  DEPENDS:=quagga +c-ares
+  DEPENDS:=quagga +libcares
 endef
 
 define Package/quagga

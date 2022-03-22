@@ -21,6 +21,7 @@ PKG_VERSION:=20.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://github.com/cjdelisle/cjdns.git
+PKG_MIRROR_HASH:=2bcf168b48faab8352db95f85a664adf733554ccc8ea788f1689385b1e7acecb
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=77259a49e5bc7ca7bc6dca5bd423e02be563bdc5
 PKG_LICENSE:=GPL-3.0
@@ -38,7 +39,7 @@ define Package/cjdns
 	TITLE:=Encrypted near-zero-conf mesh routing protocol
 	URL:=https://github.com/cjdelisle/cjdns
 	MAINTAINER:=Lars Gierth <larsg@systemli.org>
-	DEPENDS:=@IPV6 +kmod-tun +libnl-tiny +libpthread +librt \
+	DEPENDS:=@!arc @IPV6 +kmod-tun +libnl-tiny +libpthread +librt \
 		+libuci-lua +lua-bencode +dkjson +luasocket +lua-sha2
 endef
 
@@ -56,7 +57,7 @@ define Package/cjdns-tests
 	TITLE:=cjdns test cases
 	URL:=https://github.com/cjdelisle/cjdns
 	MAINTAINER:=Lars Gierth <larsg@systemli.org>
-	DEPENDS:=+libpthread +librt
+	DEPENDS:=+libpthread +librt @!arc
 endef
 
 define Package/cjdns-test/description
